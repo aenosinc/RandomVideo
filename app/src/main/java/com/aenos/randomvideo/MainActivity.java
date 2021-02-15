@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -33,6 +34,7 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
     WebView webView;
     PyObject module;
+    SharedPreferences sharedPreferences;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        sharedPreferences = getSharedPreferences("url", Context.MODE_PRIVATE);
 
         if (!Python.isStarted()) {
             Python.start(new AndroidPlatform(this));
@@ -56,7 +59,12 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setJavaScriptEnabled(true);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 
-        new Background().execute();
+        String spUrl = sharedPreferences.getString("url", "");
+        if (!spUrl.equals("")) {
+            webView.loadUrl(spUrl);
+        } else {
+            new Background().execute();
+        }
     }
 
     public class Background extends AsyncTask<Void, Void, Void> {
@@ -68,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     PyObject id = module.callAttr("get_random_video_id");
                     url = "https://www.youtube.com/embed/" + id;
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("url", url);
+                    editor.apply();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
