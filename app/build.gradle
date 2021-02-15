@@ -24,6 +24,8 @@ android {
             buildPython "C:/Program Files (x86)/Microsoft Visual Studio/Shared/Python37_64/python.exe"
             pip {
                 install "youtube-search==1.1.1"
+                install "requests==2.25.1"
+                install "beautifulsoup4==4.9.3"
             }
         }
     }
