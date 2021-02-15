@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -49,8 +50,29 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setJavaScriptEnabled(true);
         webSettings.setSupportZoom(true);
 
-        if (isConnected()) {
-            webView.loadUrl(getRandomVideoURL());
+        new Background().execute();
+    }
+
+    public class Background extends AsyncTask<Void, Void, Void> {
+        String url;
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            if (isConnected()) {
+                try {
+                    PyObject id = module.callAttr("get_random_video_id");
+                    url = "https://www.youtube.com/embed/" + id;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            webView.loadUrl(url);
         }
     }
 
@@ -63,16 +85,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.nextVideo) {
-            if (isConnected()) {
-                webView.loadUrl(getRandomVideoURL());
-            }
+            new Background().execute();
         }
         if (item.getItemId() == R.id.openInBrowser) {
-            if (isConnected()) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(webView.getUrl()));
-                startActivity(intent);
-            }
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(webView.getUrl()));
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -84,15 +102,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
-    }
-
-    private String getRandomVideoID() {
-        PyObject id = module.callAttr("get_random_video_id");
-        return id.toString();
-    }
-
-    private String getRandomVideoURL() {
-        return "https://www.youtube.com/embed/" + getRandomVideoID();
     }
 
     private boolean isConnected() {
