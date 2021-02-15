@@ -13,9 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RandomVideo">
         <activity
-            android:name=".MainActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait">
+            android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

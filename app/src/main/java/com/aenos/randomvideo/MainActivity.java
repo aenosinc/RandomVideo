@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatDelegate;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -14,9 +16,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 
 import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
@@ -44,11 +49,12 @@ public class MainActivity extends AppCompatActivity {
         module = python.getModule("main");
 
         webView = (WebView) findViewById(R.id.webView);
-        webView.setWebViewClient(new WebViewClient());
+        webView.setWebViewClient(new Browser());
+        webView.setWebChromeClient(new MyWebClient());
 
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        webSettings.setSupportZoom(true);
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 
         new Background().execute();
     }
@@ -111,4 +117,54 @@ public class MainActivity extends AppCompatActivity {
                 Objects.requireNonNull(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)).getState() == NetworkInfo.State.CONNECTED;
         return connected;
     }
+
+    class Browser extends WebViewClient {
+        Browser() {
+
+        }
+
+        public boolean shouldOverrideUrlLoading(WebView paramWebView, String paramString) {
+            paramWebView.loadUrl(paramString);
+            return true;
+        }
+    }
+
+    public class MyWebClient
+            extends WebChromeClient {
+        private View mCustomView;
+        private WebChromeClient.CustomViewCallback mCustomViewCallback;
+        protected FrameLayout mFullscreenContainer;
+        private int mOriginalOrientation;
+        private int mOriginalSystemUiVisibility;
+
+        public MyWebClient() {
+        }
+
+        public Bitmap getDefaultVideoPoster() {
+            return BitmapFactory.decodeResource(MainActivity.this.getApplicationContext().getResources(), 2130837573);
+        }
+
+        public void onHideCustomView() {
+            ((FrameLayout) MainActivity.this.getWindow().getDecorView()).removeView(this.mCustomView);
+            this.mCustomView = null;
+            MainActivity.this.getWindow().getDecorView().setSystemUiVisibility(this.mOriginalSystemUiVisibility);
+            MainActivity.this.setRequestedOrientation(this.mOriginalOrientation);
+            this.mCustomViewCallback.onCustomViewHidden();
+            this.mCustomViewCallback = null;
+        }
+
+        public void onShowCustomView(View paramView, WebChromeClient.CustomViewCallback paramCustomViewCallback) {
+            if (this.mCustomView != null) {
+                onHideCustomView();
+                return;
+            }
+            this.mCustomView = paramView;
+            this.mOriginalSystemUiVisibility = MainActivity.this.getWindow().getDecorView().getSystemUiVisibility();
+            this.mOriginalOrientation = MainActivity.this.getRequestedOrientation();
+            this.mCustomViewCallback = paramCustomViewCallback;
+            ((FrameLayout) MainActivity.this.getWindow().getDecorView()).addView(this.mCustomView, new FrameLayout.LayoutParams(-1, -1));
+            MainActivity.this.getWindow().getDecorView().setSystemUiVisibility(3846);
+        }
+    }
+
 }
