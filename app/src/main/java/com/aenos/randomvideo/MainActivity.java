@@ -77,6 +77,15 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (webView.canGoBack()) {
+            webView.goBack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     private String getRandomVideoID() {
         PyObject id = module.callAttr("get_random_video_id");
         return id.toString();
