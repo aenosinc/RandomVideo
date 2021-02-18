@@ -6,4 +6,8 @@
     <item
         android:id="@+id/openInBrowser"
         android:title="Open In Browser" />
+
+    <item
+        android:id="@+id/github"
+        android:title="Github Repo" />
 </menu>

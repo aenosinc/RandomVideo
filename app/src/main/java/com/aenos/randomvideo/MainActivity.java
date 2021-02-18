@@ -109,6 +109,11 @@ public class MainActivity extends AppCompatActivity {
             intent.setData(Uri.parse(webView.getUrl()));
             startActivity(intent);
         }
+        if (item.getItemId() == R.id.github) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("https://github.com/aenosinc/RandomVideo/"));
+            startActivity(intent);
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -140,8 +145,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public class MyWebClient
-            extends WebChromeClient {
+    public class MyWebClient extends WebChromeClient {
         private View mCustomView;
         private WebChromeClient.CustomViewCallback mCustomViewCallback;
         protected FrameLayout mFullscreenContainer;
