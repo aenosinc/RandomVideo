@@ -147,6 +147,9 @@ public class MainActivity extends AppCompatActivity {
 
     public class MyWebClient extends WebChromeClient {
         private View mCustomView;
+        private WebChromeClient.CustomViewCallback mCustomViewCallback;
+        protected FrameLayout mFullscreenContainer;
+        private int mOriginalOrientation;
         private int mOriginalSystemUiVisibility;
 
         public MyWebClient() {
@@ -157,20 +160,23 @@ public class MainActivity extends AppCompatActivity {
         }
 
         public void onHideCustomView() {
-            MainActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             ((FrameLayout) MainActivity.this.getWindow().getDecorView()).removeView(this.mCustomView);
             this.mCustomView = null;
             MainActivity.this.getWindow().getDecorView().setSystemUiVisibility(this.mOriginalSystemUiVisibility);
+            MainActivity.this.setRequestedOrientation(this.mOriginalOrientation);
+            this.mCustomViewCallback.onCustomViewHidden();
+            this.mCustomViewCallback = null;
         }
 
         public void onShowCustomView(View paramView, WebChromeClient.CustomViewCallback paramCustomViewCallback) {
-            MainActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             if (this.mCustomView != null) {
                 onHideCustomView();
                 return;
             }
             this.mCustomView = paramView;
             this.mOriginalSystemUiVisibility = MainActivity.this.getWindow().getDecorView().getSystemUiVisibility();
+            this.mOriginalOrientation = MainActivity.this.getRequestedOrientation();
+            this.mCustomViewCallback = paramCustomViewCallback;
             ((FrameLayout) MainActivity.this.getWindow().getDecorView()).addView(this.mCustomView, new FrameLayout.LayoutParams(-1, -1));
             MainActivity.this.getWindow().getDecorView().setSystemUiVisibility(3846);
         }

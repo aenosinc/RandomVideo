@@ -9,5 +9,5 @@
 
     <item
         android:id="@+id/github"
-        android:title="Github Repo" />
+        android:title="GitHub Repo" />
 </menu>
