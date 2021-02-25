@@ -25,9 +25,24 @@ def get_random_img_search():
 
 def get_random_web_search():
     if random.choice([True, False]):
-        r = requests.get("https://en.wikipedia.org/wiki/Main_Page")
-        soup = BeautifulSoup(r.content, "html.parser")
-        return random.choice(str(soup.text).split())
+        if random.choice([True, False]):
+            r = requests.get("https://en.wikipedia.org/wiki/Main_Page")
+            soup = BeautifulSoup(r.content, "html.parser")
+            words = []
+            for i in str(soup.text).split():
+                if i in words:
+                    continue
+                words.append(i)
+            return random.choice(words)
+        else:
+            r = requests.get("https://en.m.wikipedia.org/wiki/Special:Random#/random")
+            soup = BeautifulSoup(r.content, "html.parser")
+            words = []
+            for i in str(soup.text).split():
+                if i in words:
+                    continue
+                words.append(i)
+            return random.choice(words)
     else:
         r = requests.get("https://www.bbc.com/")
         soup = BeautifulSoup(r.content, "html.parser")

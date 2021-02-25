@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         if (!Python.isStarted()) {
             Python.start(new AndroidPlatform(this));
         }
+
         Python python = Python.getInstance();
         module = python.getModule("main");
 
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             if (isConnected()) {
                 try {
                     PyObject id = module.callAttr("get_random_video_id");
-                    url = "https://www.youtube.com/embed/" + id;
+                    url = "https://www.youtube.com/embed/" + id.toString();
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("url", url);
                     editor.apply();
