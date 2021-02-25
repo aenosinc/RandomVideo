@@ -34,6 +34,7 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     WebView webView;
+    WebSettings webSettings;
     PyObject module;
     SharedPreferences sharedPreferences;
 
@@ -57,9 +58,10 @@ public class MainActivity extends AppCompatActivity {
         webView.setWebViewClient(new Browser());
         webView.setWebChromeClient(new MyWebClient());
 
-        WebSettings webSettings = webView.getSettings();
+        webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+        webSettings.setMediaPlaybackRequiresUserGesture(false);
 
         String lastVideo = sharedPreferences.getString("url", "");
         if (!lastVideo.equals("")) {
@@ -92,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             webView.loadUrl(url);
+            webSettings.setMediaPlaybackRequiresUserGesture(false);
         }
     }
 

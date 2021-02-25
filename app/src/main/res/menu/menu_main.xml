@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/nextVideo"
-        android:title="Next Video" />
+        android:icon="@drawable/ic_baseline_skip_next_24"
+        android:title="Next Video"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/openInBrowser"
-        android:title="Open In Browser" />
+        android:icon="@drawable/ic_baseline_open_in_browser_24"
+        android:title="Open In Browser"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/github"
-        android:title="GitHub Repo" />
+        android:icon="@drawable/ic_baseline_code_24"
+        android:title="GitHub Repo"
+        app:showAsAction="ifRoom" />
 </menu>
