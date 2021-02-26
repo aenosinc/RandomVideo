@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setMediaPlaybackRequiresUserGesture(false);
 
         String lastVideo = sharedPreferences.getString("url", "");
-        if (!lastVideo.equals("")) {
+        if (!lastVideo.isEmpty()) {
             webView.loadUrl(lastVideo);
         } else {
             new Background().execute();
@@ -110,9 +110,11 @@ public class MainActivity extends AppCompatActivity {
             new Background().execute();
         }
         if (item.getItemId() == R.id.openInBrowser) {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(webView.getUrl()));
-            startActivity(intent);
+            if (isConnected()) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(webView.getUrl()));
+                startActivity(intent);
+            }
         }
         if (item.getItemId() == R.id.github) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
