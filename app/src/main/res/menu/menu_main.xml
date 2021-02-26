@@ -17,4 +17,10 @@
         android:icon="@drawable/ic_baseline_code_24"
         android:title="GitHub Repo"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/copy"
+        android:icon="@drawable/ic_baseline_content_copy_24"
+        android:title="Copy Url"
+        app:showAsAction="ifRoom" />
 </menu>
