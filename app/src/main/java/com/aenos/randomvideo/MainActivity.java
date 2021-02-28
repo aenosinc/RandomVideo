@@ -17,8 +17,11 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.view.InputDevice;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -158,12 +161,28 @@ public class MainActivity extends AppCompatActivity {
             paramWebView.loadUrl(paramString);
             return true;
         }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            long delta = 100;
+            long downTime = SystemClock.uptimeMillis();
+            float x = view.getLeft() + (view.getWidth() / 2);
+            float y = view.getTop() + (view.getHeight() / 2);
+
+            MotionEvent tapDownEvent = MotionEvent.obtain(downTime, downTime + delta, MotionEvent.ACTION_DOWN, x, y, 0);
+            tapDownEvent.setSource(InputDevice.SOURCE_CLASS_POINTER);
+            MotionEvent tapUpEvent = MotionEvent.obtain(downTime, downTime + delta + 2, MotionEvent.ACTION_UP, x, y, 0);
+            tapUpEvent.setSource(InputDevice.SOURCE_CLASS_POINTER);
+
+            view.dispatchTouchEvent(tapDownEvent);
+            view.dispatchTouchEvent(tapUpEvent);
+        }
     }
 
     public class MyWebClient extends WebChromeClient {
         private View mCustomView;
         private WebChromeClient.CustomViewCallback mCustomViewCallback;
-        protected FrameLayout mFullscreenContainer;
         private int mOriginalOrientation;
         private int mOriginalSystemUiVisibility;
 
@@ -196,5 +215,4 @@ public class MainActivity extends AppCompatActivity {
             MainActivity.this.getWindow().getDecorView().setSystemUiVisibility(3846);
         }
     }
-
 }
