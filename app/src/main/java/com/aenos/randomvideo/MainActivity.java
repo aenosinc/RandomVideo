@@ -68,12 +68,8 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setMediaPlaybackRequiresUserGesture(false);
 
-        String lastVideo = sharedPreferences.getString("url", "");
-        if (!lastVideo.isEmpty()) {
-            webView.loadUrl(lastVideo);
-        } else {
-            new Background().execute();
-        }
+        loadLastVideo();
+        checkNewVersion();
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -145,15 +141,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isConnected() {
-        boolean connected;
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        connected = Objects.requireNonNull(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)).getState() == NetworkInfo.State.CONNECTED ||
-                Objects.requireNonNull(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)).getState() == NetworkInfo.State.CONNECTED;
-        return connected;
-    }
-
-    class Browser extends WebViewClient {
+    public static class Browser extends WebViewClient {
         Browser() {
         }
 
@@ -213,6 +201,41 @@ public class MainActivity extends AppCompatActivity {
             this.mCustomViewCallback = paramCustomViewCallback;
             ((FrameLayout) MainActivity.this.getWindow().getDecorView()).addView(this.mCustomView, new FrameLayout.LayoutParams(-1, -1));
             MainActivity.this.getWindow().getDecorView().setSystemUiVisibility(3846);
+        }
+    }
+
+    private boolean isConnected() {
+        boolean connected;
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        connected = Objects.requireNonNull(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)).getState() == NetworkInfo.State.CONNECTED ||
+                Objects.requireNonNull(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)).getState() == NetworkInfo.State.CONNECTED;
+        return connected;
+    }
+
+    private void loadLastVideo() {
+        String lastVideo = sharedPreferences.getString("url", "");
+        if (!lastVideo.isEmpty()) {
+            webView.loadUrl(lastVideo);
+        } else {
+            new Background().execute();
+        }
+    }
+
+    private void checkNewVersion() {
+        String url = "https://github.com/aenosinc/RandomVideo/releases/download/v" + getLastVersion() +"/app-debug.apk";
+        if (!getLastVersion().equals(BuildConfig.VERSION_NAME)) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(url));
+            startActivity(intent);
+        }
+    }
+
+    private String getLastVersion() {
+        try {
+            PyObject get_last_version = module.callAttr("get_last_version");
+            return get_last_version.toString();
+        } catch (Exception e) {
+            return BuildConfig.VERSION_NAME;
         }
     }
 }

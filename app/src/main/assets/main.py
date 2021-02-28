@@ -24,7 +24,7 @@ def get_random_img_search():
 
 
 def get_random_web_search():
-    if random.choice([True, False]):
+    if random.choice([True, True, False]):
         if random.choice([True, False]):
             r = requests.get("https://en.wikipedia.org/wiki/Main_Page")
             soup = BeautifulSoup(r.content, "html.parser")
@@ -35,7 +35,8 @@ def get_random_web_search():
                 words.append(i)
             return random.choice(words)
         else:
-            r = requests.get("https://en.m.wikipedia.org/wiki/Special:Random#/random")
+            r = requests.get(
+                "https://en.m.wikipedia.org/wiki/Special:Random#/random")
             soup = BeautifulSoup(r.content, "html.parser")
             words = []
             for i in str(soup.text).split():
@@ -82,5 +83,13 @@ def get_random_video_id():
     return id
 
 
+def get_last_version():
+    r = requests.get(
+        "https://github.com/aenosinc/RandomVideo/blob/master/app/build.gradle")
+    soup = BeautifulSoup(r.content, "html.parser")
+    return str(soup.text.split("versionName ")[1].split()[0].split('"')[1])
+
+
 if __name__ == "__main__":
+    print(get_last_version())
     print(get_random_video_id())
