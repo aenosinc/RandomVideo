@@ -191,6 +191,14 @@ public class MainActivity extends AppCompatActivity {
             view.dispatchTouchEvent(tapDownEvent);
             view.dispatchTouchEvent(tapUpEvent);
         }
+
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+            if (!url.startsWith("https://www.youtube.com/embed/")) {
+                view.goBack();
+            }
+        }
     }
 
     public class MyWebClient extends WebChromeClient {
