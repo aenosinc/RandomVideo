@@ -23,4 +23,10 @@
         android:icon="@drawable/ic_baseline_content_copy_24"
         android:title="Copy Url"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/refresh"
+        android:icon="@drawable/ic_baseline_refresh_24"
+        android:title="Refresh"
+        app:showAsAction="ifRoom" />
 </menu>

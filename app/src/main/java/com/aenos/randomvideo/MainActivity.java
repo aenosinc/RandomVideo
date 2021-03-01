@@ -151,6 +151,9 @@ public class MainActivity extends AppCompatActivity {
             clipboardManager.setPrimaryClip(clipData);
             Toast.makeText(this, webView.getUrl(), Toast.LENGTH_SHORT).show();
         }
+        if (item.getItemId() == R.id.refresh) {
+            webView.reload();
+        }
         return super.onOptionsItemSelected(item);
     }
 
