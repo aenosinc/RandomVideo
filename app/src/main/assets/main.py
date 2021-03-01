@@ -84,10 +84,13 @@ def get_random_video_id():
 
 
 def get_last_version():
-    r = requests.get(
-        "https://github.com/aenosinc/RandomVideo/blob/master/app/build.gradle")
+    r = requests.get("https://github.com/aenosinc/RandomVideo/releases")
     soup = BeautifulSoup(r.content, "html.parser")
-    return str(soup.text.split("versionName ")[1].split()[0].split('"')[1])
+    for i in soup.find_all("span"):
+        if not i.get("class"):
+            continue
+        if "css-truncate-target" in i.get("class"):
+            return str(i.text.split("v")[1])
 
 
 if __name__ == "__main__":

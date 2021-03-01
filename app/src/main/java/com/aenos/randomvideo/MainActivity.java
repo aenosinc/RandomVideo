@@ -69,11 +69,11 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setMediaPlaybackRequiresUserGesture(false);
 
         loadLastVideo();
-        checkNewVersion();
+        new CheckNewVersion().execute();
     }
 
     @SuppressLint("StaticFieldLeak")
-    public class Background extends AsyncTask<Void, Void, Void> {
+    public class NextVideo extends AsyncTask<Void, Void, Void> {
         String url;
 
         @Override
@@ -100,6 +100,28 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
+    public class CheckNewVersion extends AsyncTask<Void, Void, Void> {
+        String lastVersion, url;
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            lastVersion = getLastVersion();
+            url = "https://github.com/aenosinc/RandomVideo/releases/download/v" + lastVersion + "/app-debug.apk";
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (!lastVersion.equals(BuildConfig.VERSION_NAME)) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+                startActivity(intent);
+            }
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -109,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.nextVideo) {
-            new Background().execute();
+            new NextVideo().execute();
         }
         if (item.getItemId() == R.id.openInBrowser) {
             if (isConnected()) {
@@ -217,16 +239,7 @@ public class MainActivity extends AppCompatActivity {
         if (!lastVideo.isEmpty()) {
             webView.loadUrl(lastVideo);
         } else {
-            new Background().execute();
-        }
-    }
-
-    private void checkNewVersion() {
-        String url = "https://github.com/aenosinc/RandomVideo/releases/download/v" + getLastVersion() +"/app-debug.apk";
-        if (!getLastVersion().equals(BuildConfig.VERSION_NAME)) {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(url));
-            startActivity(intent);
+            new NextVideo().execute();
         }
     }
 
