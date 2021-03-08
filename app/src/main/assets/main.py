@@ -1,4 +1,5 @@
 from youtube_search import YoutubeSearch
+from youtubesearchpython import CustomSearch, VideoSortOrder
 from bs4 import BeautifulSoup
 import requests
 import random
@@ -38,12 +39,7 @@ def get_random_web_search():
             r = requests.get(
                 "https://en.m.wikipedia.org/wiki/Special:Random#/random")
             soup = BeautifulSoup(r.content, "html.parser")
-            words = []
-            for i in str(soup.text).split():
-                if i in words:
-                    continue
-                words.append(i)
-            return random.choice(words)
+            return random.choice(str(soup.text).split())
     else:
         r = requests.get("https://www.bbc.com/")
         soup = BeautifulSoup(r.content, "html.parser")
@@ -67,11 +63,17 @@ def get_random_video_id():
             except:
                 word = get_random_img_search()
 
-        results = YoutubeSearch(word, max_results=100).to_dict()
-
-        video_ids = []
-        for i in results:
-            video_ids.append(i["id"])
+        if random.choice([True, False]):
+            results = YoutubeSearch(word, max_results=100).to_dict()
+            video_ids = []
+            for i in results:
+                video_ids.append(i["id"])
+        else:
+            customSearch = CustomSearch(
+                'img', VideoSortOrder.uploadDate, limit=100)
+            video_ids = []
+            for i in customSearch.result().get("result"):
+                video_ids.append(i.get("id"))
 
         id = None
         try:
@@ -94,5 +96,4 @@ def get_last_version():
 
 
 if __name__ == "__main__":
-    print(get_last_version())
-    print(get_random_video_id())
+    print(get_last_version(), get_random_video_id())
