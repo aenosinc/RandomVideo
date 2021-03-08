@@ -9,24 +9,24 @@
     <item
         android:id="@+id/openInBrowser"
         android:icon="@drawable/ic_baseline_open_in_browser_24"
-        android:title="Open In Browser"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/github"
-        android:icon="@drawable/ic_baseline_code_24"
-        android:title="GitHub Repo"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/copy"
-        android:icon="@drawable/ic_baseline_content_copy_24"
-        android:title="Copy Url"
+        android:title="Open in Browser"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/refresh"
         android:icon="@drawable/ic_baseline_refresh_24"
-        android:title="Refresh"
+        android:title="Reload"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/copy"
+        android:icon="@drawable/ic_baseline_content_copy_24"
+        android:title="Copy Link"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/github"
+        android:title="GitHub Repo"
+        app:showAsAction="never" />
+
 </menu>

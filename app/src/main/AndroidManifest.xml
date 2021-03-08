@@ -13,8 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RandomVideo">
         <activity
-            android:name=".MainActivity"
-            android:screenOrientation="sensor">
+            android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

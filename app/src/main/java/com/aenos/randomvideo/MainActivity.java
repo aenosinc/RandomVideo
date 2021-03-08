@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static class Browser extends WebViewClient {
+    public class Browser extends WebViewClient {
         Browser() {
         }
 
@@ -195,8 +195,15 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
-            if (!url.startsWith("https://www.youtube.com/embed/")) {
+            if (url.startsWith("https://www.youtube.com/embed/")) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("url", url);
+                editor.apply();
+            } else {
                 view.goBack();
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+                startActivity(intent);
             }
         }
     }
