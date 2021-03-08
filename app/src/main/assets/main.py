@@ -70,7 +70,7 @@ def get_random_video_id():
                 video_ids.append(i["id"])
         else:
             customSearch = CustomSearch(
-                'img', VideoSortOrder.uploadDate, limit=100)
+                word, VideoSortOrder.uploadDate, limit=100)
             video_ids = []
             for i in customSearch.result().get("result"):
                 video_ids.append(i.get("id"))
